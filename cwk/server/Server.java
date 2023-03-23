@@ -24,25 +24,40 @@ public class Server {
 		}
 	}
 	public void run () {
-		try {
-			Socket clientSock = serverSocket.accept();
+		while (true) {
+			try {
+				Socket clientSock = serverSocket.accept();
 
 
-			PrintWriter writer = new PrintWriter(clientSock.getOutputStream());
-			BufferedReader in = new BufferedReader(new InputStreamReader(clientSock.getInputStream()));
+				PrintWriter out = new PrintWriter(clientSock.getOutputStream());
+				BufferedReader in = new BufferedReader(new InputStreamReader(clientSock.getInputStream()));
 
-			//System.out.println(in.readLine());
+				String input;
+				while ((input = in.readLine()) != null) {
 
-			spp = new Protocol();
-			String newData = spp.show();
-			//writer.print(newData);
+					if (input.equals("show")) {
+						spp = new Protocol();
+						spp.show();
+						out.println(spp.error);
 
-			writer.close();
+					} else if (input.equals("itemtable")) {
+						spp = new Protocol();
+						spp.item();
+						out.println(spp.dataArray.get(0).itemName);
+					}
+				}
+				out.close();
+				in.close();
+				clientSock.close();
+			/*
+			out.close();
+			in.close();
 			clientSock.close();
-		}
-		catch (IOException error) {
-			System.err.println("Could not accept connection: "+listeningPort);
-			System.exit(fail);
+			*/
+			} catch (IOException error) {
+				System.err.println("Could not accept connection: " + listeningPort);
+				System.exit(fail);
+			}
 		}
 	}
 

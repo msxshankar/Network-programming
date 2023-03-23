@@ -26,6 +26,7 @@ public class Client {
 		// Incorrect number of arguments so exits
 		if (args.length == 0 || args.length > 3) {
 			System.err.println("Incorrect number of arguments");
+			System.out.println("here");
 			System.exit(fail);
 		}
 
@@ -34,7 +35,7 @@ public class Client {
 		}
 
 		else if (args[0].equals("item")) {
-			;
+			item(args[1]);
 		}
 
 		else if (args[0].equals("bid")) {
@@ -80,17 +81,40 @@ public class Client {
 			socketOut.println("show");
 
 			System.out.println(socketIn.readLine());
-			String info = "hello!";
-			//String info = stdIn.readLine();
-			//System.out.println(info);
-			//String fromServer;
-			//String fromUser;
 
-			//stdIn.close();
+			socketOut.close();
+			socketIn.close();
 			soc.close();
 		}
 		catch (IOException error) {
 			System.out.println(error);
+		}
+	}
+
+	public void item(String args) {
+		try {
+
+			socketOut.println("item" + args);
+
+			System.out.println(socketIn.readLine());
+
+			socketOut.close();
+			socketIn.close();
+			soc.close();
+		}
+		catch (IOException error) {
+			System.out.println(error);
+		}
+	}
+
+	public void cleanup () {
+		try {
+			socketIn.close();
+			socketOut.close();
+			soc.close();
+		}
+		catch (IOException error) {
+			System.out.println("Could not close");
 		}
 	}
 
@@ -106,6 +130,8 @@ public class Client {
 
 		// Parses command line arguments and communicates with server
 		client.parseCmdLineArgs(args);
-		client.show();
+
+		// Closes all connections
+		client.cleanup();
 	}
 }

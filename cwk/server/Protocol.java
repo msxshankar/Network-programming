@@ -8,31 +8,35 @@ import java.util.*;
  */
 public class Protocol {
 
-    class Data {
+    String error;
+    public class Data {
         String itemName;
         double currentBid;
         String clientAddress;
     }
 
-    private ArrayList<Data> dataArray = new ArrayList<Data>();
-    public String show () {
+    public ArrayList<Data> dataArray = new ArrayList<Data>();
 
+    public void show () {
+
+        if (dataArray.size() == 0) {
+           error = "There are currently no items in this auction";
+        }
+
+        else {
+           ;
+        }
+    }
+
+    public void item () {
+
+        // Create new entry
         Data data = new Data();
         data.itemName = "Table";
         data.currentBid = 10.1;
         data.clientAddress = "127.0.0.0";
-
         dataArray.add(data);
-
-        if (dataArray.size() == 0) {
-            return "There are currently no items in this auction";
-        }
-
-        else {
-            for (int i = 0; i < dataArray.size(); i++) {
-                System.out.println(dataArray.get(i));
-            }
-            return dataArray.get(0).clientAddress;
-        }
     }
+
+    public void bid () {}
 }
