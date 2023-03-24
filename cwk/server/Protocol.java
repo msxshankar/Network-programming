@@ -14,8 +14,13 @@ public class Protocol {
         double currentBid;
         String clientAddress;
     }
-
     public ArrayList<Data> dataArray = new ArrayList<Data>();
+
+    /*
+    public Protocol () {
+        dataArray = new ArrayList<Data>();
+    }
+    */
 
     public void show () {
 
@@ -24,16 +29,16 @@ public class Protocol {
         }
 
         else {
-           ;
+           error = dataArray.get(0).itemName;
         }
     }
 
-    public void item () {
+    public void item (String item) {
 
         // Create new entry
         Data data = new Data();
-        data.itemName = "Table";
-        data.currentBid = 10.1;
+        data.itemName = item;
+        data.currentBid = 0.0;
         data.clientAddress = "127.0.0.0";
         dataArray.add(data);
     }

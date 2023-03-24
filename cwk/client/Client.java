@@ -94,7 +94,8 @@ public class Client {
 	public void item(String args) {
 		try {
 
-			socketOut.println("item" + args);
+			socketOut.println("item");
+			socketOut.println(args);
 
 			System.out.println(socketIn.readLine());
 

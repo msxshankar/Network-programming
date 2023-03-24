@@ -12,7 +12,7 @@ public class Server {
 
 	private int listeningPort = 6500;
 	private ServerSocket serverSocket = null;
-	private Protocol spp = null;
+	private Protocol spp = new Protocol();
 
 	public Server() {
 		try {
@@ -26,6 +26,7 @@ public class Server {
 	public void run () {
 
 		Socket clientSock = null;
+
 		while (true) {
 
 			try {
@@ -42,20 +43,29 @@ public class Server {
 
 				String input;
 				input = in.readLine();
+				/*
+				System.out.println(input);
+				input = in.readLine();
+				System.out.println(input);
+				*/
 
 				if (input.equals("show")) {
-					spp = new Protocol();
 					spp.show();
 
+					System.out.println(spp.dataArray);
 					out.println(spp.error);
 
 				}
 
-				else if (input.equals("itemtable")) {
-					spp = new Protocol();
-					spp.item();
-					out.println(spp.dataArray.get(0).itemName);
+				else if (input.equals("item")) {
+
+					input = in.readLine();
+					spp.item(input);
+
+					System.out.println(spp.dataArray);
+					out.println(spp.dataArray);
 				}
+
 				out.close();
 				in.close();
 				clientSock.close();
