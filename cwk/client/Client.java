@@ -12,7 +12,7 @@ public class Client {
 	private static final int success = 0;
 
 	// Variables
-	private final int listeningPort = 6100;
+	private final int listeningPort = 6500;
 	private Socket soc = null;
 	private PrintWriter socketOut = null;
 	private BufferedReader socketIn = null;
