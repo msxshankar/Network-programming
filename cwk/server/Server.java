@@ -14,6 +14,8 @@ public class Server {
 	private ServerSocket serverSocket = null;
 	private Protocol spp = new Protocol();
 
+	FileWriter fptr = null;
+
 	public Server() {
 		try {
 			serverSocket = new ServerSocket(listeningPort);
@@ -26,6 +28,13 @@ public class Server {
 	public void run () {
 
 		Socket clientSock = null;
+
+		try {
+			fptr = new FileWriter("log.txt", true);
+		}
+		catch (IOException e) {
+			System.err.println("Could not create log.txt");
+		}
 
 		while (true) {
 
@@ -44,6 +53,8 @@ public class Server {
 				spp.message = "";
 				String input;
 				input = in.readLine();
+
+				fptr.write(input);
 
 				if (input.equals("show")) {
 					spp.show();
@@ -72,9 +83,11 @@ public class Server {
 					spp.bid(item, value);
 				}
 
+
 				out.close();
 				in.close();
 				clientSock.close();
+
 
 			} catch (IOException error) {
 				System.err.println("Could not accept connection: " + listeningPort);
