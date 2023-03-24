@@ -41,20 +41,21 @@ public class Server {
 				PrintWriter out = new PrintWriter(clientSock.getOutputStream());
 				BufferedReader in = new BufferedReader(new InputStreamReader(clientSock.getInputStream()));
 
+				spp.message = "";
 				String input;
 				input = in.readLine();
-				/*
-				System.out.println(input);
-				input = in.readLine();
-				System.out.println(input);
-				*/
 
 				if (input.equals("show")) {
 					spp.show();
-
-					System.out.println(spp.dataArray);
-					out.println(spp.error);
-
+					System.out.println(spp.message);
+					if (spp.message.equals("")) {
+						for (int i = 0; i < spp.dataArray.size(); i++) {
+							out.println(spp.dataArray.get(i).itemName + " : " + spp.dataArray.get(i).currentBid + " : " + spp.dataArray.get(i).clientAddress);
+						}
+					}
+					else {
+						out.println(spp.message);
+					}
 				}
 
 				else if (input.equals("item")) {
@@ -62,8 +63,13 @@ public class Server {
 					input = in.readLine();
 					spp.item(input);
 
-					System.out.println(spp.dataArray);
-					out.println(spp.dataArray);
+					out.println(spp.message);
+				}
+
+				else if (input.equals("bid")) {
+					String item = in.readLine();
+					String value = in.readLine();
+					spp.bid(item, value);
 				}
 
 				out.close();

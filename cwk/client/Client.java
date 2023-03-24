@@ -18,40 +18,8 @@ public class Client {
 	private BufferedReader socketIn = null;
 
 	/**
-	 * Parses command line arguments
- 	 * @param args
-	 */
-	public void parseCmdLineArgs(String[] args) {
-
-		// Incorrect number of arguments so exits
-		if (args.length == 0 || args.length > 3) {
-			System.err.println("Incorrect number of arguments");
-			System.out.println("here");
-			System.exit(fail);
-		}
-
-		else if (args[0].equals("show")) {
-			show();
-		}
-
-		else if (args[0].equals("item")) {
-			item(args[1]);
-		}
-
-		else if (args[0].equals("bid")) {
-			;
-		}
-
-		else {
-			System.err.println("Unknown argument");
-			System.exit(fail);
-		}
-
-	}
-
-	/**
 	 * Connects to port and returns error if unsuccessful
- 	 */
+	 */
 	public void connect () {
 		try {
 
@@ -74,20 +42,55 @@ public class Client {
 	}
 
 	/**
+	 * Parses command line arguments
+ 	 * @param args
+	 */
+	public void parseCmdLineArgs(String[] args) {
+
+		// Incorrect number of arguments so exits
+		if (args.length == 0 || args.length > 3) {
+			System.err.println("Incorrect number of arguments\n");
+			System.exit(fail);
+		}
+
+		else if (args[0].equals("show")) {
+			show();
+		}
+
+		else if (args[0].equals("item")) {
+			item(args[1]);
+		}
+
+		else if (args[0].equals("bid")) {
+			bid(args[1], args[2]);
+		}
+
+		else {
+			System.err.println("Unknown argument: "+args[0]);
+			System.exit(fail);
+		}
+
+	}
+
+
+	/**
 	 * Displays all items in the auction
  	 */
 	public void show () {
 		try {
 			socketOut.println("show");
 
-			System.out.println(socketIn.readLine());
+			String input;
+			while ((input = socketIn.readLine()) != null) {
+				System.out.println(input);
+			}
 
 			socketOut.close();
 			socketIn.close();
 			soc.close();
 		}
 		catch (IOException error) {
-			System.out.println(error);
+			System.out.println("Unable to read from server");
 		}
 	}
 
@@ -105,6 +108,20 @@ public class Client {
 		}
 		catch (IOException error) {
 			System.out.println(error);
+		}
+	}
+
+	public void bid (String item, String value)	{
+		try {
+			socketOut.println("bid");
+			socketOut.println(item);
+			socketOut.println(value);
+
+			soc.close();
+		}
+		catch (IOException error) {
+			System.err.println("Unable to bid to server");
+			System.exit(fail);
 		}
 	}
 
