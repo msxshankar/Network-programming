@@ -9,6 +9,7 @@ import java.util.*;
 public class Protocol {
 
     public String message = "";
+    private int bidMade = 0;
     public class Data {
         String itemName;
         double currentBid;
@@ -33,16 +34,26 @@ public class Protocol {
         }
     }
 
-    public void item (String item) {
+    public String item (String item, String address) {
 
+        // Check if an item already exists
+        for (int i = 0; i < dataArray.size(); i++) {
+            if (dataArray.get(i).itemName.equals(item)) {
+                return "Failure";
+            }
+        }
+
+        // Check whether bids have been made
         // Create new entry
         Data data = new Data();
         data.itemName = item;
         data.currentBid = 0.0;
-        data.clientAddress = "127.0.0.0";
+        data.clientAddress = "<no bids>";
         dataArray.add(data);
 
         message = "Accepted";
+
+        return "Success";
     }
 
     public void bid (String item, String value) {

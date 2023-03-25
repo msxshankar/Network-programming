@@ -5,7 +5,7 @@ import java.net.*;
 /**
  * Client class
  */
-public class Client {
+public class Client extends Thread {
 
 	// Error status
 	private static final int fail = 1;
@@ -16,6 +16,13 @@ public class Client {
 	private Socket soc = null;
 	private PrintWriter socketOut = null;
 	private BufferedReader socketIn = null;
+
+	/*
+	public Client (Socket socket) {
+		super("Client");
+		this.socketOut = socketOut;
+	}
+	*/
 
 	/**
 	 * Connects to port and returns error if unsuccessful

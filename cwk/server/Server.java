@@ -1,6 +1,7 @@
 // Imports
 import java.net.*;
 import java.io.*;
+import java.util.concurrent.*;
 
 /**
  * Server class
@@ -13,6 +14,7 @@ public class Server {
 	private int listeningPort = 6500;
 	private ServerSocket serverSocket = null;
 	private Protocol spp = new Protocol();
+	ExecutorService service = null;
 
 	FileWriter fptr = null;
 
@@ -28,18 +30,13 @@ public class Server {
 	public void run () {
 
 		Socket clientSock = null;
-
-		try {
-			fptr = new FileWriter("log.txt", true);
-		}
-		catch (IOException e) {
-			System.err.println("Could not create log.txt");
-		}
+		service = Executors.newFixedThreadPool(2);
 
 		while (true) {
 
 			try {
 				clientSock = serverSocket.accept();
+				service.submit(new Client(clientSock));
 			}
 			catch (IOException error) {
 				System.err.println("could not listen");
@@ -54,7 +51,14 @@ public class Server {
 				String input;
 				input = in.readLine();
 
-				fptr.write(input);
+				try {
+					fptr = new FileWriter("log.txt", true);
+					fptr.write("date" + " | " + "time" + " | " + "address" + " | " + input);
+					fptr.close();
+				}
+				catch (IOException e) {
+					System.err.println("Could not create log.txt");
+				}
 
 				if (input.equals("show")) {
 					spp.show();
@@ -76,8 +80,8 @@ public class Server {
 					InetSocketAddress sockAddress = (InetSocketAddress) clientSock.getRemoteSocketAddress();
 					String address = sockAddress.getAddress().getHostAddress().toString();
 
-					System.out.println(address);
-					spp.item(input);
+
+					spp.item(input, address);
 
 					out.println(spp.message);
 				}
