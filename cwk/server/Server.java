@@ -72,6 +72,11 @@ public class Server {
 				else if (input.equals("item")) {
 
 					input = in.readLine();
+
+					InetSocketAddress sockAddress = (InetSocketAddress) clientSock.getRemoteSocketAddress();
+					String address = sockAddress.getAddress().getHostAddress().toString();
+
+					System.out.println(address);
 					spp.item(input);
 
 					out.println(spp.message);
@@ -81,6 +86,8 @@ public class Server {
 					String item = in.readLine();
 					String value = in.readLine();
 					spp.bid(item, value);
+
+					out.println(spp.message);
 				}
 
 

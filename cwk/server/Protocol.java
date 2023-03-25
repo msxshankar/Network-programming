@@ -54,11 +54,12 @@ public class Protocol {
 
         for (int i = 0; i < dataArray.size() ; i++) {
             if (dataArray.get(i).itemName.equals(item)) {
-                if (dataArray.get(i).currentBid >= Double.parseDouble(value)) {
+                if (dataArray.get(i).currentBid >= price) {
                     message = "Rejected";
                 }
                 else {
                     message = "Accepted";
+                    dataArray.get(i).currentBid = price;
                 }
             }
         }

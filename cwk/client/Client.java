@@ -117,7 +117,9 @@ public class Client {
 			socketOut.println(item);
 			socketOut.println(value);
 
-			soc.close();
+			System.out.println(socketIn.readLine());
+
+			cleanup();
 		}
 		catch (IOException error) {
 			System.err.println("Unable to bid to server");
