@@ -43,24 +43,33 @@ public class Client extends Thread {
 
 	public void run (String[] args) {
 		try {
-			/*
-			for (String s: args) {
-				socketOut.println(s);
+
+			// Checks for correct number of arguments
+			if (args.length > 3 || args.length == 0) {
+				System.out.println("Incorrect argument length");
+
+				cleanup();
+
+				System.exit(fail);
 			}
-			*/
 
-			socketOut.println(args[0]);
+			// Sends command line arguments to server
+			String sendMessage = "";
+			for (int i = 0; i < args.length; i++) {
+				sendMessage = sendMessage.concat(args[i]+" ");
+			}
+			socketOut.println(sendMessage);
 
-			System.out.println("client here");
-			/*
+			// Receives server message
 			String input;
 			while ((input = socketIn.readLine()) != null) {
 				System.out.println(input);
 			}
+			/*
+			//if (!(socketIn.ready())) {
+				System.out.println(socketIn.readLine());
+			//}
 			 */
-			String input = socketIn.readLine();
-			System.out.println(input);
-
 			socketIn.close();
 			socketOut.close();
 			soc.close();

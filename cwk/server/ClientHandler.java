@@ -21,22 +21,17 @@ public class ClientHandler extends Thread {
        try {
            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
            BufferedReader in = new BufferedReader (new InputStreamReader(socket.getInputStream()));
-            /*
-           String[] input = new String[3];
-           for (int i = 0; i < 3; i++) {
-               input[i] = in.readLine();
-           }
-            */
 
-           String input = in.toString();
-           //String input = in.toString();
-           //String[] input = in.toString().split(" ");
-           //System.out.println(input[0]);
-           //spp = new Protocol(input);
-           //spp.run();
-           System.out.println("here");
+           String[] input = in.readLine().split(" ");
+           System.out.println(input[0]);
 
-           out.println(input);
+           InetSocketAddress sockAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
+           String address = sockAddress.getAddress().getHostAddress().toString();
+
+           spp = new Protocol(input, address);
+           spp.run();
+
+           out.println(spp.message);
 
            out.close();
            in.close();

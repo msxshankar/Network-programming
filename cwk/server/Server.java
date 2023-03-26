@@ -29,7 +29,7 @@ public class Server {
 	public void run () {
 
 		Socket clientSock = null;
-		service = Executors.newFixedThreadPool(2);
+		service = Executors.newFixedThreadPool(30);
 
 		while (true) {
 
