@@ -1,31 +1,48 @@
-// Imports
+// Required imports
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.*;
 
 /**
  * Server class
+ * Accepts client connection and assigns it to a new thread
+ * @author Mayur Shankar
+ * @since 27/03/2023
  */
 public class Server {
 
-	private static final int fail = 1;
-	private static final int success = 0;
+	// Error codes
+	private static final int failErrorCode = 1;
+	private static final int successErrorCode = 0;
 
-	private int listeningPort = 6500;
+	// Variable declarations
+	private static final int listeningPort = 6500;
 	private ServerSocket serverSocket = null;
 	ExecutorService service = null;
-
 	FileWriter fptr = null;
 
+	/**
+	 * Server Constructor which creates a server socket
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
+ 	 */
 	public Server() {
 		try {
 			serverSocket = new ServerSocket(listeningPort);
 		}
 		catch (IOException error) {
-			System.err.println("Could not listen on port: " + listeningPort);
-			System.exit(fail);
+			System.err.println("Server could not listen on port: " + listeningPort);
+			System.err.println("IO Exception Error");
+			System.exit(failErrorCode);
 		}
 	}
+
+	/**
+	 * Creates a fixed thread pool with 30 threads
+	 * Submits to Client Handler
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
+	 */
 	public void run () {
 
 		Socket clientSock = null;
@@ -38,17 +55,18 @@ public class Server {
 				service.submit(new ClientHandler(clientSock));
 
 			} catch (IOException error) {
-				System.err.println("could not listen");
-				System.exit(fail);
+				System.err.println("Unable to submit client to thread: IO Exception Error");
+				System.exit(failErrorCode);
 			}
 		}
 	}
 
 	/**
 	 * Server program start
-	 * @param args
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
 	 */
-	public static void main( String[] args ) throws IOException {
+	public static void main(String[] args) {
 
 		// Creates new server object and runs it
 		Server newSer = new Server();

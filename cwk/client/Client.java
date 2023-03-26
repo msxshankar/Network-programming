@@ -1,24 +1,31 @@
-// Imports
+// Required imports
 import java.io.*;
 import java.net.*;
 
 /**
  * Client class
+ * Connects to server using ports
+ * Sends command line arguments and receives output from server
+ * @author Mayur Shankar
+ * @since 27/03/2023
  */
-public class Client extends Thread {
+public class Client {
 
-	// Error status
-	private static final int fail = 1;
-	private static final int success = 0;
+	// Error codes
+	private static final int failErrorCode = 1;
+	private static final int successErrorCode = 0;
 
-	// Variables
-	private final int listeningPort = 6500;
+	// Variable declarations
+	private static final int listeningPort = 6500;
 	private Socket soc = null;
 	private PrintWriter socketOut = null;
 	private BufferedReader socketIn = null;
 
 	/**
-	 * Connects to port and returns error if unsuccessful
+	 * Connects to port as localhost
+	 * Exceptions are caught and handled
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
 	 */
 	public void connect () {
 		try {
@@ -31,32 +38,45 @@ public class Client extends Thread {
 		}
 
 		catch (UnknownHostException error) {
-			System.err.println("Unknown host exception");
-			System.exit(fail);
+			System.err.println("Couldn't connect to server: Unknown Host Exception");
+			System.exit(failErrorCode);
 		}
 
 		catch (IOException error) {
-			System.err.println("Couldn't get I/O for the connection to host");
-			System.exit(fail);
+			System.err.println("Couldn't connect to IO stream: IO Exception error");
+			System.exit(failErrorCode);
 		}
 	}
 
+	/**
+	 * Performs validation checks on command line arguments
+	 * Then sends command line arguments to server and receives output
+ 	 * @param args - command line arguments
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
+	 */
 	public void run (String[] args) {
 		try {
 
-			// Checks for correct number of arguments
-			if (args.length > 3 || args.length == 0) {
-				System.out.println("Incorrect argument length");
-
+			// No arguments are passed
+			if (args.length == 0) {
+				System.out.println("Usage: java Client [show] [item] [bid]");
 				cleanup();
-
-				System.exit(fail);
+				System.exit(failErrorCode);
 			}
 
-			// Sends command line arguments to server
+			// Incorrect number of arguments passed
+			if (args.length > 3) {
+				System.out.println("Incorrect number of arguments passed");
+				System.out.println("Usage: java Client [show] [item] [bid]");
+				cleanup();
+				System.exit(failErrorCode);
+			}
+
+			// Sends command line arguments to server as string
 			String sendMessage = "";
-			for (int i = 0; i < args.length; i++) {
-				sendMessage = sendMessage.concat(args[i]+" ");
+			for (String arg : args) {
+				sendMessage = sendMessage.concat(arg + " ");
 			}
 			socketOut.println(sendMessage);
 
@@ -65,20 +85,19 @@ public class Client extends Thread {
 			while ((input = socketIn.readLine()) != null) {
 				System.out.println(input);
 			}
-			/*
-			//if (!(socketIn.ready())) {
-				System.out.println(socketIn.readLine());
-			//}
-			 */
-			socketIn.close();
-			socketOut.close();
-			soc.close();
 		}
 		catch (IOException error) {
 			System.err.println("Could not send info to server");
+			cleanup();
+			System.exit(failErrorCode);
 		}
 	}
 
+	/**
+	 * Closes socket connections
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
+ 	 */
 	public void cleanup () {
 		try {
 			socketIn.close();
@@ -86,13 +105,17 @@ public class Client extends Thread {
 			soc.close();
 		}
 		catch (IOException error) {
-			System.out.println("Could not cleanup");
+			System.err.println("Unable to close socket connections: IO Exception Error");
+			System.exit(failErrorCode);
 		}
+
 	}
 
 	/**
-	 * Start of client program
- 	 * @param args
+	 * Runs Client program
+ 	 * @param args - command line arguments
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
 	 */
 	public static void main( String[] args ) {
 
