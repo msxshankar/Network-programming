@@ -48,12 +48,17 @@ public class Client extends Thread {
 				socketOut.println(s);
 			}
 			*/
+
+			socketOut.println(args[0]);
+
 			System.out.println("client here");
+			/*
 			String input;
 			while ((input = socketIn.readLine()) != null) {
 				System.out.println(input);
 			}
-			//String input = socketIn.readLine();
+			 */
+			String input = socketIn.readLine();
 			System.out.println(input);
 
 			socketIn.close();

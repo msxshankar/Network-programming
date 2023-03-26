@@ -27,6 +27,8 @@ public class ClientHandler extends Thread {
                input[i] = in.readLine();
            }
             */
+
+           String input = in.toString();
            //String input = in.toString();
            //String[] input = in.toString().split(" ");
            //System.out.println(input[0]);
@@ -34,7 +36,7 @@ public class ClientHandler extends Thread {
            //spp.run();
            System.out.println("here");
 
-           out.println("message");
+           out.println(input);
 
            out.close();
            in.close();
