@@ -1,31 +1,31 @@
-// Imports
+// Required imports
 import java.io.*;
 import java.net.*;
 
 /**
  * Client class
+ * Connects to server using ports
+ * Sends command line arguments and receives output from server
+ * @author Mayur Shankar
+ * @since 27/03/2023
  */
-public class Client extends Thread {
+public class Client {
 
-	// Error status
-	private static final int fail = 1;
-	private static final int success = 0;
+	// Error codes
+	private static final int failErrorCode = 1;
+	private static final int successErrorCode = 0;
 
-	// Variables
-	private final int listeningPort = 6500;
+	// Variable declarations
+	private static final int listeningPort = 6500;
 	private Socket soc = null;
 	private PrintWriter socketOut = null;
 	private BufferedReader socketIn = null;
 
-	/*
-	public Client (Socket socket) {
-		super("Client");
-		this.socketOut = socketOut;
-	}
-	*/
-
 	/**
-	 * Connects to port and returns error if unsuccessful
+	 * Connects to port as localhost
+	 * Exceptions are caught and handled
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
 	 */
 	public void connect () {
 		try {
@@ -38,102 +38,61 @@ public class Client extends Thread {
 		}
 
 		catch (UnknownHostException error) {
-			System.err.println("Unknown host exception");
-			System.exit(fail);
+			System.err.println("Couldn't connect to server: Unknown Host Exception");
 		}
 
 		catch (IOException error) {
-			System.err.println("Couldn't get I/O for the connection to host");
-			System.exit(fail);
+			System.err.println("Couldn't connect to IO stream: IO Exception error");
 		}
 	}
 
 	/**
-	 * Parses command line arguments
- 	 * @param args
+	 * Performs validation checks on command line arguments
+	 * Then sends command line arguments to server and receives output
+ 	 * @param args - command line arguments
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
 	 */
-	public void parseCmdLineArgs(String[] args) {
-
-		// Incorrect number of arguments so exits
-		if (args.length == 0 || args.length > 3) {
-			System.err.println("Incorrect number of arguments\n");
-			System.exit(fail);
-		}
-
-		else if (args[0].equals("show")) {
-			show();
-		}
-
-		else if (args[0].equals("item")) {
-			item(args[1]);
-		}
-
-		else if (args[0].equals("bid")) {
-			bid(args[1], args[2]);
-		}
-
-		else {
-			System.err.println("Unknown argument: "+args[0]);
-			System.exit(fail);
-		}
-
-	}
-
-
-	/**
-	 * Displays all items in the auction
- 	 */
-	public void show () {
+	public void run (String[] args) {
 		try {
-			socketOut.println("show");
 
+			// No arguments are passed
+			if (args.length == 0) {
+				System.out.println("Usage: java Client [show] [item] [bid]");
+				cleanup();
+			}
+
+			// Incorrect number of arguments passed
+			if (args.length > 3) {
+				System.out.println("Incorrect number of arguments passed");
+				System.out.println("Usage: java Client [show] [item] [bid]");
+				cleanup();
+			}
+
+			// Sends command line arguments to server as string
+			String sendMessage = "";
+			for (String arg : args) {
+				sendMessage = sendMessage.concat(arg + " ");
+			}
+			socketOut.println(sendMessage);
+
+			// Receives server message
 			String input;
 			while ((input = socketIn.readLine()) != null) {
 				System.out.println(input);
 			}
-
-			socketOut.close();
-			socketIn.close();
-			soc.close();
 		}
 		catch (IOException error) {
-			System.out.println("Unable to read from server");
-		}
-	}
-
-	public void item(String args) {
-		try {
-
-			socketOut.println("item");
-			socketOut.println(args);
-
-			System.out.println(socketIn.readLine());
-
-			socketOut.close();
-			socketIn.close();
-			soc.close();
-		}
-		catch (IOException error) {
-			System.out.println(error);
-		}
-	}
-
-	public void bid (String item, String value)	{
-		try {
-			socketOut.println("bid");
-			socketOut.println(item);
-			socketOut.println(value);
-
-			System.out.println(socketIn.readLine());
-
+			System.err.println("Could not send info to server");
 			cleanup();
 		}
-		catch (IOException error) {
-			System.err.println("Unable to bid to server");
-			System.exit(fail);
-		}
 	}
 
+	/**
+	 * Closes socket connections
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
+ 	 */
 	public void cleanup () {
 		try {
 			socketIn.close();
@@ -141,13 +100,16 @@ public class Client extends Thread {
 			soc.close();
 		}
 		catch (IOException error) {
-			System.out.println("Could not close");
+			System.err.println("Unable to close socket connections: IO Exception Error");
 		}
+
 	}
 
 	/**
-	 * Start of client program
- 	 * @param args
+	 * Runs Client program
+ 	 * @param args - command line arguments
+	 * @author Mayur Shankar
+	 * @since 27/03/2023
 	 */
 	public static void main( String[] args ) {
 
@@ -155,10 +117,7 @@ public class Client extends Thread {
 		Client client = new Client();
 		client.connect();
 
-		// Parses command line arguments and communicates with server
-		client.parseCmdLineArgs(args);
-
-		// Closes all connections
-		client.cleanup();
+		// Communicates with server
+		client.run(args);
 	}
 }
