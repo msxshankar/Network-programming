@@ -17,13 +17,6 @@ public class Client extends Thread {
 	private PrintWriter socketOut = null;
 	private BufferedReader socketIn = null;
 
-	/*
-	public Client (Socket socket) {
-		super("Client");
-		this.socketOut = socketOut;
-	}
-	*/
-
 	/**
 	 * Connects to port and returns error if unsuccessful
 	 */
@@ -48,89 +41,27 @@ public class Client extends Thread {
 		}
 	}
 
-	/**
-	 * Parses command line arguments
- 	 * @param args
-	 */
-	public void parseCmdLineArgs(String[] args) {
-
-		// Incorrect number of arguments so exits
-		if (args.length == 0 || args.length > 3) {
-			System.err.println("Incorrect number of arguments\n");
-			System.exit(fail);
-		}
-
-		else if (args[0].equals("show")) {
-			show();
-		}
-
-		else if (args[0].equals("item")) {
-			item(args[1]);
-		}
-
-		else if (args[0].equals("bid")) {
-			bid(args[1], args[2]);
-		}
-
-		else {
-			System.err.println("Unknown argument: "+args[0]);
-			System.exit(fail);
-		}
-
-	}
-
-
-	/**
-	 * Displays all items in the auction
- 	 */
-	public void show () {
+	public void run (String[] args) {
 		try {
-			socketOut.println("show");
-
+			/*
+			for (String s: args) {
+				socketOut.println(s);
+			}
+			*/
+			System.out.println("client here");
 			String input;
 			while ((input = socketIn.readLine()) != null) {
 				System.out.println(input);
 			}
+			//String input = socketIn.readLine();
+			System.out.println(input);
 
-			socketOut.close();
 			socketIn.close();
+			socketOut.close();
 			soc.close();
 		}
 		catch (IOException error) {
-			System.out.println("Unable to read from server");
-		}
-	}
-
-	public void item(String args) {
-		try {
-
-			socketOut.println("item");
-			socketOut.println(args);
-
-			System.out.println(socketIn.readLine());
-
-			socketOut.close();
-			socketIn.close();
-			soc.close();
-		}
-		catch (IOException error) {
-			System.out.println(error);
-		}
-	}
-
-	public void bid (String item, String value)	{
-		try {
-			socketOut.println("bid");
-			socketOut.println(item);
-			socketOut.println(value);
-
-			System.out.println(socketIn.readLine());
-
-			cleanup();
-		}
-		catch (IOException error) {
-			System.err.println("Unable to bid to server");
-			System.exit(fail);
+			System.err.println("Could not send info to server");
 		}
 	}
 
@@ -141,7 +72,7 @@ public class Client extends Thread {
 			soc.close();
 		}
 		catch (IOException error) {
-			System.out.println("Could not close");
+			System.out.println("Could not cleanup");
 		}
 	}
 
@@ -155,10 +86,7 @@ public class Client extends Thread {
 		Client client = new Client();
 		client.connect();
 
-		// Parses command line arguments and communicates with server
-		client.parseCmdLineArgs(args);
-
-		// Closes all connections
-		client.cleanup();
+		// Communicates with server
+		client.run(args);
 	}
 }
