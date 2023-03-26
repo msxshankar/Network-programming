@@ -17,7 +17,6 @@ public class ClientHandler extends Thread {
    // Variable declarations
    private Socket socket = null;
    private Protocol protocol = null;
-   private FileWriter fptr = null;
 
     /**
      * Client Handler Constructor
@@ -64,7 +63,6 @@ public class ClientHandler extends Thread {
        }
        catch (IOException error) {
           System.err.println("Could read from / write to client: IO Exception Error");
-          System.exit(failErrorCode);
        }
    }
 }

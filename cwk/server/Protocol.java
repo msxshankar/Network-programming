@@ -57,6 +57,14 @@ public class Protocol {
 
       // Show command
       if (cmdLineArguments[0].equals("show")) {
+
+          // If any other arguments are passed
+          if (cmdLineArguments.length != 1) {
+              returnMessage = "Incorrect number of command line arguments";
+              return;
+          }
+
+          // Empty auction
           if (dataArray.size() == 0) {
               returnMessage = "There are currently no items in this auction";
           }
@@ -81,10 +89,17 @@ public class Protocol {
       // Item command
       else if (cmdLineArguments[0].equals("item")) {
 
+          // Validate command line arguments
+          if (cmdLineArguments.length != 2) {
+              returnMessage = "Incorrect number of command line arguments";
+              return;
+          }
+
           // Check if an item already exists
           for (int i = 0; i < dataArray.size(); i++) {
               if (dataArray.get(i).itemName.equals(cmdLineArguments[1])) {
                   returnMessage = "Failure";
+                  log();
                   return;
               }
           }
@@ -96,7 +111,7 @@ public class Protocol {
           data.clientAddress = "<no bids>";
           dataArray.add(data);
 
-          returnMessage = "Accepted";
+          returnMessage = "Success";
           log();
 
       }
@@ -104,17 +119,27 @@ public class Protocol {
       // Bid command
       else if (cmdLineArguments[0].equals("bid")) {
 
-          if (cmdLineArguments.length < 3) {
-              returnMessage = "Rejected";
+          if (cmdLineArguments.length != 3) {
+              returnMessage = "Incorrect number of command line arguments";
+              log();
               return;
           }
 
           // Converts price into double
-          double price = Double.parseDouble(cmdLineArguments[2]);
+          double price;
+          try {
+              price = Double.parseDouble(cmdLineArguments[2]);
+          }
+          catch (NumberFormatException error) {
+              returnMessage = "Incorrect price inputted";
+              log();
+              return;
+          }
 
           // Rejects prices less than or equal to 0
           if (price <= 0) {
-              returnMessage = "Rejected";
+              returnMessage = "Failure";
+              log();
           }
 
           // Check if bid price is greater than auction price
@@ -122,6 +147,7 @@ public class Protocol {
               if (dataArray.get(i).itemName.equals(cmdLineArguments[1])) {
                   if (dataArray.get(i).currentBid >= price) {
                       returnMessage = "Rejected";
+                      log();
                   }
                   else {
                       returnMessage = "Accepted";
@@ -134,8 +160,14 @@ public class Protocol {
 
           // Bid made on item not in auction so reject
           if (returnMessage.equals("")) {
-              returnMessage = "Rejected";
+              returnMessage = "Failure";
+              log();
           }
+      }
+
+      // Invalid command
+      else {
+         returnMessage = "Unidentified command - please try again";
       }
     }
 
@@ -167,7 +199,6 @@ public class Protocol {
         }
         catch (IOException e) {
             System.err.println("Could not create/append to log.txt: IO Exception Error");
-            System.exit(failErrorCode);
         }
     }
 }

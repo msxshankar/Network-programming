@@ -39,12 +39,10 @@ public class Client {
 
 		catch (UnknownHostException error) {
 			System.err.println("Couldn't connect to server: Unknown Host Exception");
-			System.exit(failErrorCode);
 		}
 
 		catch (IOException error) {
 			System.err.println("Couldn't connect to IO stream: IO Exception error");
-			System.exit(failErrorCode);
 		}
 	}
 
@@ -62,7 +60,6 @@ public class Client {
 			if (args.length == 0) {
 				System.out.println("Usage: java Client [show] [item] [bid]");
 				cleanup();
-				System.exit(failErrorCode);
 			}
 
 			// Incorrect number of arguments passed
@@ -70,7 +67,6 @@ public class Client {
 				System.out.println("Incorrect number of arguments passed");
 				System.out.println("Usage: java Client [show] [item] [bid]");
 				cleanup();
-				System.exit(failErrorCode);
 			}
 
 			// Sends command line arguments to server as string
@@ -89,7 +85,6 @@ public class Client {
 		catch (IOException error) {
 			System.err.println("Could not send info to server");
 			cleanup();
-			System.exit(failErrorCode);
 		}
 	}
 
@@ -106,7 +101,6 @@ public class Client {
 		}
 		catch (IOException error) {
 			System.err.println("Unable to close socket connections: IO Exception Error");
-			System.exit(failErrorCode);
 		}
 
 	}

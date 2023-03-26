@@ -19,7 +19,6 @@ public class Server {
 	private static final int listeningPort = 6500;
 	private ServerSocket serverSocket = null;
 	ExecutorService service = null;
-	FileWriter fptr = null;
 
 	/**
 	 * Server Constructor which creates a server socket
@@ -33,7 +32,6 @@ public class Server {
 		catch (IOException error) {
 			System.err.println("Server could not listen on port: " + listeningPort);
 			System.err.println("IO Exception Error");
-			System.exit(failErrorCode);
 		}
 	}
 
@@ -56,7 +54,6 @@ public class Server {
 
 			} catch (IOException error) {
 				System.err.println("Unable to submit client to thread: IO Exception Error");
-				System.exit(failErrorCode);
 			}
 		}
 	}
