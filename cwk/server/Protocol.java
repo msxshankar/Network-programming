@@ -60,7 +60,7 @@ public class Protocol {
 
           // If any other arguments are passed
           if (cmdLineArguments.length != 1) {
-              returnMessage = "Incorrect number of command line arguments";
+              returnMessage = "Incorrect number of command line arguments\nFormat should be java Client [show]";
               return;
           }
 
@@ -91,7 +91,7 @@ public class Protocol {
 
           // Validate command line arguments
           if (cmdLineArguments.length != 2) {
-              returnMessage = "Incorrect number of command line arguments";
+              returnMessage = "Incorrect number of command line arguments\nFormat should be java Client [item] <string>";
               return;
           }
 
@@ -120,8 +120,7 @@ public class Protocol {
       else if (cmdLineArguments[0].equals("bid")) {
 
           if (cmdLineArguments.length != 3) {
-              returnMessage = "Incorrect number of command line arguments";
-              log();
+              returnMessage = "Incorrect number of command line arguments\nFormat should be java Client [bid] <string> <value>";
               return;
           }
 
@@ -131,8 +130,7 @@ public class Protocol {
               price = Double.parseDouble(cmdLineArguments[2]);
           }
           catch (NumberFormatException error) {
-              returnMessage = "Incorrect price inputted";
-              log();
+              returnMessage = "Invalid price inputted - please try again";
               return;
           }
 
